@@ -1,0 +1,13 @@
+/**
+*先想到的是用group by对部门进行分组，然后再select每个部门中工资最高的人
+但是，提交后发现是错误的。这是因为少考虑了一种情况，每个部门的最高工资可能不止一个人！正确的做法应该是把检索出来的结果作为一个数据表，然后再把员工表中与最高工资相等且是该部门的员工检索出来
+*/
+
+# Write your MySQL query statement below
+SELECT t.Department,p.Name AS Employee,t.Salary
+FROM Employee AS p,
+(SELECT d.Id,d.Name AS Department,e.Name AS Employee,MAX(e.Salary) AS Salary
+FROM Employee e INNER JOIN Department d ON e.DepartmentId=d.Id
+GROUP BY e.DepartmentId
+ORDER BY e.Salary DESC) AS t
+WHERE p.Salary=t.Salary AND p.DepartmentId=t.Id
